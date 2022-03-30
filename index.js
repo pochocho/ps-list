@@ -1,13 +1,9 @@
-import process from 'node:process';
-import {promisify} from 'node:util';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-import childProcess from 'node:child_process';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const util = require('util');
+const path = require('path');
+const childProcess = require('child_process');
 
 const TEN_MEGABYTES = 1000 * 1000 * 10;
-const execFile = promisify(childProcess.execFile);
+const execFile = util.promisify(childProcess.execFile);
 
 const windows = async () => {
 	// Source: https://github.com/MarkTiedemann/fastlist
@@ -68,6 +64,4 @@ const nonWindows = async (options = {}) => {
 	return nonWindowsMultipleCalls(options);
 };
 
-const psList = process.platform === 'win32' ? windows : nonWindows;
-
-export default psList;
+module.exports = process.platform === 'win32' ? windows : nonWindows;
